@@ -23,8 +23,8 @@ int main(void) {
 		scanf("%d", &cost);
 
 		while (scanf("%d", &from) && from != -1) {
-			adj[i].push_back(from);
-
+			adj[from].push_back(i);
+			inDegree++;
 		}
 	}
 
