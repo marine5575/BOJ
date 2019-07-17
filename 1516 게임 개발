@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstdio>
+
+using namespace std;
+
+int inDegree[501];
+int cost[501];
+vector<int> adj[501];
+int ans[501];
+
+priority_queue<int> pq;
+
+int main(void) {
+	int N;
+
+	scanf("%d", &N);
+
+	for (int i = 0; i < N; i++) {
+		int cost, from;
+
+		scanf("%d", &cost);
+
+		while (scanf("%d", &from) && from != -1) {
+			adj[i].push_back(from);
+
+		}
+	}
+
+	return 0;
+}
