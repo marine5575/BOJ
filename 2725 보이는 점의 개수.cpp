@@ -19,11 +19,10 @@
 //	map[0][0] = 1;
 //	//	printf("%d\n\n", map[1][0]);
 //
-//	for (int x = 0; x <= MAX; x++) {
-//		for (int y = 0; y <= MAX; y++) {
-//			if (x == 1 && y == 0) map[1][0] = 0;
+//	for (int x = 0; x < MAX; x++) {
+//		for (int y = 0; y < MAX; y++) {
 //			if (map[x][y] == 0) {
-//				for (int i = 2; i * x <= MAX && i * y <= MAX; i++) {
+//				for (int i = 2; i * x < MAX && i * y < MAX; i++) {
 //					if (map[i*x][i*y] == 1) continue;
 //
 //					map[i*x][i*y] = 1;
