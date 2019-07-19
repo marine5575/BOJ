@@ -1,0 +1,56 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+int ext_gcd(int a, int b, int &x, int &y) {
+	// 들어온 나머지 값이 0인가? 
+	if(!b) {
+		// k * x + c * y = 1
+		x = 1;
+		y = 0;
+		
+		return a;	// 이전 값 반환 
+	}
+	
+	int quo = a / b, rem = a % b, nx, ny;	// 몫, 나머지, 바뀐 x, y 
+	int gcd = ext_gcd(b, rem, nx, ny);	// 최대 공약수 
+	
+	x = ny;
+	y = nx - ny * quo;
+	
+	return gcd;
+}
+
+
+int main(void) {
+	int t, k, c, x, y;	// 테스트 케이스, k명, 주머니 안 c개, x, y 
+	
+	scanf("%d", &t);
+	
+	while(t--) {
+		scanf("%d %d", &k, &c);
+		
+		int gcd = ext_gcd(k, c, x, y);	// 최대 공약수 
+		
+		// 서로소가 아닌가? 
+		if (gcd != 1) {
+			printf("IMPOSSIBLE\n");
+			continue;
+		}
+		// 서로소인 경우 
+		else {
+			while (y <= 0) y += k;	// 음수거나 0이면 사람 수를 더 함 
+			
+			if (c == 1) y = k + 1;	// 사탕 수가 하나인가?
+			// 값은 1e9를 넘을 수 없음 
+			if (y > 1e9) {
+				printf("IMPOSSIBLE\n");
+				continue;
+			}
+			else printf("%d\n", y);
+		}
+	}
+	
+	return 0;
+}
