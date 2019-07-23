@@ -50,7 +50,11 @@ int main(void) {
 
 				// 조상이 다른가?
 				if (a != b) {
-					diff[b] = w + diff[from] - diff[to];	// 조상과 현재의 차이 갱신
+					/*
+					diff[to]는 이전 조상님이 to보다 얼마 큰지 나타내는 것이므로
+					이전 조상님 기준으로는 반대여야 됨
+					*/
+					diff[b] = w + diff[from] - diff[to];
 					parent[b] = a;	// 공통 조상으로 만들기
 				}
 			}
