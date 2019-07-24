@@ -7,7 +7,7 @@ using namespace std;
 typedef pair<int, int> pii;
 
 int dp[1001][1001];
-pii arr[1001];
+vector<pii> arr;
 int w;
 
 int dist(int x1, int x2, int y1, int y2) {
@@ -55,9 +55,13 @@ int main(void) {
 	int n;
 	scanf("%d", &n);
 	scanf("%d", &w);
+	
+	arr.push_back({1, 1});
+	arr.push_back({n, n});
 
-	for (int i = 0; i < w; i++) {
-		scanf("%d %d", &arr[i].first, &arr[i].second);
+	for (int i = 0, a, b; i < w; i++) {
+		scanf("%d %d", &a, &b);
+		arr.push_back({a, b});
 	}
 
 	memset(dp, -1, sizeof(dp));
