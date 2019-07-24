@@ -20,37 +20,43 @@ int dist(int x1, int x2, int y1, int y2) {
 int solve(int x, int y) {
 	int &result = dp[x][y];  // 최소 거리합 저장
 
-        // 예전에 이미 저장했었나?
+	// 예전에 이미 저장했었나?
 	if (result != -1) return result;
 
 	int next = max(x, y) + 1;  // 현재 사건 번호. 1, 2번 경찰차 중 하나는 직전 사건 맡음
 
-        // 0, 1번 사건은 초기 상태
-        // 그래서 사실 사건 번호 전체적으로 2개씩 밀림
+  // 0, 1번 사건은 초기 상태
+  // 그래서 사실 사건 번호 전체적으로 2개씩 밀림
 	if (next > w + 1) return 0;
 
-        //
+  // x, y, 다음 사건의 좌표들
 	int x1 = arr[x].first, x2 = arr[y].first, x3 = arr[next].first;
 	int y1 = arr[x].second, y2 = arr[y].second, y3 = arr[next].second;
-
+	
+	// dp[x][y] 최솟값으로 갱신
 	return result = min(solve(next, y) + dist(x1, x3, y1, y3), solve(x, next) + dist(x2, x3, y2, y3));
 }
 
 void get(int car1, int car2) {
-	int next = max(car1, car2) + 1;
+	int next = max(car1, car2) + 1;	// 다음 사건 번호
 
+	// 범위 체크
 	if (next > w + 1) return;
 
+	// 경찰차 1이 있는 사건과 다음 사건의 좌표
 	int x1 = arr[car1].first, x3 = arr[next].first;
 	int y1 = arr[car1].second, y3 = arr[next].second;
 
+	// 사실 최소거리는 0이므로
 	if (dp[next][car2] == -1) dp[next][car2] = 0;
 	if (dp[car1][next] == -1) dp[car1][next] = 0;
 
+	// 1번 경찰차가 출동했는가?
 	if (dp[car1][car2] == dp[next][car2] + dist(x1, y1, x3, y3)) {
 		printf("1\n");
 		get(next, car2);
 	}
+	// 2번 경찰차가 출동했는가?
 	else {
 		printf("2\n");
 		get(car1, next);
@@ -59,10 +65,11 @@ void get(int car1, int car2) {
 
 
 int main(void) {
-	int n;
+	int n;	// 지도 크기
 	scanf("%d", &n);
 	scanf("%d", &w);
 	
+	// 1번, 2번 경찰차의 초기 상태 저장
 	arr.push_back({1, 1});
 	arr.push_back({n, n});
 
@@ -70,7 +77,8 @@ int main(void) {
 		scanf("%d %d", &a, &b);
 		arr.push_back({a, b});
 	}
-
+	
+	// 초기화
 	memset(dp, -1, sizeof(dp));
 
 	printf("%d\n", solve(0, 1));
