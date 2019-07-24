@@ -1,3 +1,10 @@
+/*
+D[i][S] = 1~i번째 앱까지만 활용하여 비활성화 비용의 합이 S일 때 확보할 수 있는 최대 메모리
+D[i][S] = max(D[i-1][S], D[i-1][S-C[i]]+M[i])
+ans = D[N][S]를 탐색하면서..?
+*/
+
+
 #include <cstdio>
 #include <algorithm>
 #include <cstring>
