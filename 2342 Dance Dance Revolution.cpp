@@ -7,7 +7,7 @@ using namespace std;
 
 vector<int> arr;	// input
 int n;	// input 개수
-int dp[5][5][100001];	// dp[left][right][i] : 왼발 위치, 오른발 위치, 이번이 몇번째 움직임?
+int dp[5][5][100001];	// dp[left][right][i] : 왼발 위치, 오른발 위치, 이번이 몇번째 움직임? 일 때 최소 힘
 
 int check(int from, int to) {
 	// 시작점에서 출발
