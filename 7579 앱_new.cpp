@@ -4,7 +4,7 @@
 using namespace std;
 
 int mem[101], cost[101];	// mem[i] : i가 사용 중인 메모리 바이트, cost[i] : i를 재활성 시키는데 필요한 비용
-int dp[10001];	// dp[cost] : 재활성화 비용이 cost일 때 확보할 수 있는 최대 메모리
+int dp[10001];	// dp[cost] : 활성화 되어 있는 앱의 전체 비용이 cost일 때 확보할 수 있는 최대 메모리
 
 
 int main(void) {
@@ -19,9 +19,9 @@ int main(void) {
 
 	// 모든 앱에 대해서 해봄
 	for (int i = 0; i < n; i++) {
-		// 최대 비용에서 하나씩 줄여서 마지막 앱 비용만 남기기
+		// 전체 활성화에서 i만 활성화 시킬 때까지
 		for (int j = maxi; j >= cost[i]; j--) {
-			// 현재 값과 i번째 앱을 비활성화 시키지 않았을 때의 메모리를 비교하여 최대값 저장
+			// i를 활성화 vs i를 비활성화 + 차지했던 mem
 			dp[j] = max(dp[j], dp[j - cost[i]] + mem[i]);
 		}
 	}
