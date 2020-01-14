@@ -21,7 +21,7 @@ void dfs(int cnt) {
 		
 		visited[i] = 1;	// 방문 체크 
 		arr[cnt] = i;	// cnt번째의 수는 i 
-		func(cnt + 1);	// 다음 수를 찾아 떠남 
+		dfs(cnt + 1);	// 다음 수를 찾아 떠남 
 		visited[i] = 0;	// 방문 해제 
 	}
 }
