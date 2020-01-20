@@ -139,7 +139,7 @@ int main(void) {
 					map[j][i] = 0;
 					break;
 				}
-				// 빨간 공 
+				// 빨간 공  
 				case 'R': {
 					irx = i; iry = j;
 					break;
