@@ -26,7 +26,7 @@ void bfs(void) {
 			// 현재 공들의 위치 & queue에서 빼기 
 			ball cur = q.front(); q.pop();
 			
-			// 구멍에 빠졌을 때 
+			// 빨간 공이 구멍에 빠졌을 때 => success
 			if(cur.rx == hx && cur.ry == hy) {
 				ans = cnt;
 				return;
@@ -39,41 +39,54 @@ void bfs(void) {
 				
 				// 빨간 공 굴리기 
 				while(1) {
-					rx += dx[i]; ry += dy[i];
+					rx += dx[i]; ry += dy[i];	// up, down, left, right
 					
+					// 벽과 겹칠 경우 
 					if(map[ry][rx] == -1) {
 						rx -= dx[i]; ry -= dy[i];
 						break;
 					}
+					// 구멍에 빠졌을 경우 
 					else if(map[ry][rx] == 1) break;
 				}
 				
+				// 파란 공 굴리기 
 				while(1) {
-					bx += dx[i]; by += dy[i];
+					bx += dx[i]; by += dy[i];	// up, down, left, right
 					
+					// 벽과 겹칠 경우 
 					if(map[by][bx] == -1) {
 						bx -= dx[i]; by -= dy[i];
 						break;
 					}
+					// 구멍에 빠졌을 경우
 					else if(map[by][bx] == 1) break;
 				}
 				
+				// 파란 공에 구멍에 빠짐 => game over 
 				if(map[by][bx] == 1) continue;
 				
+				// 빨간 공과 파란 공이 겹침 
 				if(rx == bx && ry == by) {
+					// 누가 더 멀리서 왔나? (빨간 공 기준) 
 					switch(i) {
+						// up
 						case 0: {
+							// 빨간 공이 더 멀리서 왔나? 
 							cur.ry > cur.by ? ry++ : by++;
 							break;
 						}
+						// down
 						case 1: {
 							cur.ry < cur.by? ry-- : by--;
 							break;
 						}
+						// left
 						case 2: {
 							cur.rx > cur.bx ? rx++ : bx++;
 							break;
 						}
+						// right
 						case 3: {
 							cur.rx < cur.bx ? rx-- : bx--;
 							break;
@@ -81,22 +94,24 @@ void bfs(void) {
 					}
 				}
 				
+				// 온 적이 없는가? 
 				if(!visited[rx][ry][bx][by]) {
-					ball next = {rx, ry, bx, by};
+					ball next = {rx, ry, bx, by};	// 다음 위치 
 					q.push(next);
-					visited[rx][ry][bx][by] = 1;
+					visited[rx][ry][bx][by] = 1;	// 방문 체크 
 				}
 			}
 		}
 		
+		// 10번 안에 찾진 못했움.. 
 		if(cnt == 10) {
 			ans = -1;
 			return;
 		}
-		cnt++;
+		cnt++; 
 	}
 	
-	ans = -1;
+	ans = -1;	// 찾지도 못하고 queue가 끝남 
 	return;
 }
 
@@ -105,7 +120,7 @@ int main(void) {
 	cin.tie(0);
 	ios::sync_with_stdio(0);
 	
-	int n, m;
+	int n, m;	// 세로, 가로 
 	char input;
 	cin >> n >> m;
 	
@@ -114,22 +129,27 @@ int main(void) {
 			cin >> input;
 			
 			switch(input) {
+				// 벽 
 				case '#':	{
 					map[j][i] = -1;
 					break;
 				}
+				// 길 
 				case '.': {
 					map[j][i] = 0;
 					break;
 				}
+				// 빨간 공 
 				case 'R': {
 					irx = i; iry = j;
 					break;
 				}
+				// 파란 공 
 				case 'B': {
 					ibx = i; iby = j;
 					break;
 				}
+				// 구멍 
 				case 'O': {
 					hx = i; hy = j;
 					map[j][i] = 1;
@@ -139,6 +159,7 @@ int main(void) {
 		}
 	}
 	
+	// queue 초기화 
 	ball init = {irx, iry, ibx, iby};
 	q.push(init);
 	visited[irx][iry][ibx][iby] = 1;
