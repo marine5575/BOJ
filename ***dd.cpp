@@ -11,7 +11,7 @@ int dfs(int x, int y, int cnt) {
 	if(cnt == 4) {
 		return map[y][x];
 	}
-	
+	 
 	int sum = 0;
 	
 	for(int i = 0; i < 4; i++) {
