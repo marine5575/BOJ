@@ -5,7 +5,7 @@ using namespace std;
 int map[501][501], visited[501][501];
 int dx[4] = {0, 0, -1, 1};
 int dy[4] = {-1, 1, 0, 0};
-int maxi = -1;
+int n, m, maxi = -1;
 
 int dfs(int x, int y, int cnt) {
 	if(cnt == 4) {
@@ -21,12 +21,47 @@ int dfs(int x, int y, int cnt) {
 		
 		if(!visited[ny][nx]) {
 			visited[ny][nx] = 1;
-			sum += dfs(nx, ny, cnt + 1);
 			
-			if(maxi < sum) maxi = sum;
+			int cur = map[y][x] + dfs(nx, ny, cnt + 1);
+			
+			if(sum < cur) sum = cur;
 			visited[ny][nx] = 0;
 		}
 	}
+}
+
+int fuck(int x, int y) {
+	int tmp, sum = 0;
+	
+	// ㅗ
+	if(x >= 1 && y >= 1 && x < m - 1  && y < n) {
+		tmp = map[y][x] + map[y - 1][x] + map[y][x - 1] + map[y][x + 1];
+		
+		if(sum < tmp) sum = tmp;
+	}
+	
+	// ㅓ
+	if(x >= 1 && y >= 1 && y < n - 1 && x < m) {
+		tmp = map[y][x] + map[y][x - 1] + map[y - 1][x] + map[y + 1][x];
+		
+		if(sum < tmp) sum = tmp;
+	}
+	
+	// ㅜ
+	if(x >= 1 && y >= 0 && x < m - 1 && y < n - 1) {
+		tmp = map[y][x] + map[y][x - 1] + map[y][x + 1] + map[y + 1][x];
+		
+		if(sum < tmp) sum = tmp;
+	}
+	
+	// ㅏ
+	if(y >= 1 && x >= 0 && x < m - 1 && y < n - 1) {
+		tmp = map[y][x] + map[y][x + 1] + map[y - 1][x] + map[y + 1][x];
+		
+		if(sum < tmp) sum = tmp;
+	}
+	
+	return sum;
 }
 
 
@@ -34,7 +69,6 @@ int main(void) {
 	cin.tie(0);
 	ios::sync_with_stdio(0);
 	
-	int n, m;
 	cin >> n >> m;
 	
 	for(int j = 0; j < n; j++) {
