@@ -1,15 +1,11 @@
 /*
 seg tree에서는 tree의 최대 크기에 유의해야 한다.
-1. input <= 50000  =>  input * 4
-2. 50000 < input < 1000000  => input * 2 + 바로 밑에 반복 (ex. 220000)
-3. input > 1000000  => input * 2 + 50000 
+=> 배열 크기 = input * 4 
 */
-#include <iostream>
-#define INF 987654321
+#include <stdio.h>
+#define INF 1000000001
 
-using namespace std;
-
-int tree[220001];	// seg tree
+int tree[400001];	// seg tree
 int start, n, m;	// 시작 지점, input 개수, (a, b) 쌍 개수 
 
 int query(int i, int j) {
@@ -52,16 +48,13 @@ void makeTree() {
 
 
 int main(void) {
-	cin.tie(0);
-	ios::sync_with_stdio(0);
-	
-	cin >> n >> m;
+	scanf("%d %d", &n, &m);
 	
 	// tree 크기 대충 가늠 
 	for(start = 1; start < n; start <<= 1);
 	
 	for(int i = 0; i < n; i++) {
-		cin >> tree[start + i];
+		scanf("%d", &tree[start + i]);
 	}
 	
 	makeTree();	// 트리 만들기 
@@ -69,8 +62,8 @@ int main(void) {
 	int l, r;	// l ~ r번 까지 살펴봄 
 	
 	while(m--) {
-		cin >> l >> r;
-		cout << query(l, r) << "\n";
+		scanf("%d %d", &l, &r);
+		printf("%d\n", query(l, r));
 	}
 	
 	return 0;
