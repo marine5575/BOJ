@@ -3,88 +3,101 @@
 // 핵심: 브루트 포스 => 닥치고 다 찾아보기 
 /************************/
 #include <stdio.h>
-#define INF 1000000001
+#include <vector>
+#define MAX_TOWN 	21
+#define MAX_CHICK 14
+#define INF				((int)1e9 + 1)
 
-typedef struct st {
+using namespace std;
+
+typedef struct pt {
 	int x, y;
 } pt;
 
-int n, m;	// 지도 크기, 열 수 있는 최대 치킨집 수 
-int chickMax, homeMax, ans = INF;	// 현재 치킨집 개수, 현재 집 개수, 최소 치킨거리 
-pt chickArr[14], homeArr[101];	// 치킨집 위치, 집 위치 
-int visited[14];	// 치킨집 열었는지 확인 
+int n, m, minDist = INF;	// 도시 크기, 폐업 면한 치킨집 수, 최소 거리 
+int map[MAX_TOWN][MAX_TOWN];
+char open[MAX_CHICK];
+vector<pt> homePos, chickPos;	// 집의 위치, 치킨집 위치 
 
-int cal_Chick_Dist(pt a, pt b) {
-	int dx = a.x - b.x < 0 ? b.x - a.x : a.x - b.x;
-	int dy = a.y - b.y < 0 ? b.y - a.y : a.y - b.y;
+void input_Data(void) {
+	scanf("%d %d", &n, &m);
 	
-	return dx + dy;
+	for(int j = 0; j < n; j++) {
+		for(int i = 0; i < n; i++) {
+			scanf("%d", &map[j][i]);
+			
+			pt tmp = {i, j};
+			if(map[j][i] == 1) homePos.push_back(tmp);
+			else if(map[j][i] == 2) chickPos.push_back(tmp);
+		}
+	}
 }
 
-int min(int a, int b) {
+inline int min(int a, int b) {
 	return a < b ? a : b;
 }
 
-void open_Chick(int last, int cnt) {
-	// chickArr[last]에 치킨집을 열었을 때
-	// 치킨 거리 계산 후 최소 길이 갱신
-	// cnt = last 열었을 때 열려있는 총 치킨집 수 
+inline int abs(int a) {
+	return a < 0 ? -a : a;
+}
+
+inline int cal_Dist(pt a, pt b) {
+	return abs(a.x - b.x) + abs(a.y - b.y);
+}
+
+void cal_All_Dist(void) {
+	// 각 집의 최소 치킨 거리를 더해서 예전에 구했던 값과 비교 
 	
-	// 치킨 거리 계산할 필요 없는 경우 
-	if(last == chickMax || cnt > m) return;
+	int sum = 0;	// 치킨거리 합 
 	
-	visited[last] = 1;	// 방문 체크 
-	
-	int sum = 0;	// 현재 전체 최소 치킨 거리 
-	
-	for(int i = 0; i < homeMax; i++) {
-		int dist = INF, num = 0;	// 현재 집에서 최소 치킨거리, 확인한 열려있는 치킨집 수 
+	for(int i = 0; i < homePos.size(); i++) {
+		int dist = INF, num = 0;	// 최소 치킨거리, 들린 치킨집 수 
 		
-		for(int j = 0; j < chickMax; j++) {
-			// 열려있는 모든 치킨집 다 확인함 
-			if(num == cnt) break;
+		for(int j = 0; j < chickPos.size(); j++) {
+			// 열린 치킨집은 다 들렀음 
+			if(num == m) break;
 			// 닫혀있음 
-			if(!visited[j]) continue;
+			if(!open[j]) continue;
 			
 			// 최소값 갱신 
-			dist = min(dist, cal_Chick_Dist(homeArr[i], chickArr[j]));
-			num++;	// 열린 치킨집 + 1 
+			dist = min(dist, cal_Dist(homePos[i], chickPos[j]));
+			num++;
 		}
 		
 		sum += dist;
 	}
 	
 	// 최소값 갱신 
-	if(ans > sum) ans = sum;
-	
-	open_Chick(last + 1, cnt + 1);	// 다음 치킨집 열기 (last가 열려있는 상태) 
-	visited[last] = 0;	// 방문 해제 
-	open_Chick(last + 1, cnt);	// 다음 치킨집 열기 (last가 닫혀있는 상태) 
+	if(minDist > sum) minDist = sum;
 }
 
-int main(void) {
-	scanf("%d %d", &n, &m);
+void dfs(int here, int cnt) {
+	// 이번에 here부터 열 치킨집을 살펴볼 것임 
+	// 직전까지 cnt개의 치킨집을 열었음
 	
-	for(int j = 0, tmp; j < n; j++) {
-		for(int i = 0; i < n; i++) {
-			scanf("%d", &tmp);
-			
-			// 집일 때 
-			if(tmp == 1) {
-				homeArr[homeMax].x = i;
-				homeArr[homeMax++].y = j;
-			}
-			// 치킨집일 때 
-			else if(tmp == 2) {
-				chickArr[chickMax].x = i;
-				chickArr[chickMax++].y = j;
-			}
-		}
+	// 최대로 열었음 
+	if(cnt >= m) {
+		cal_All_Dist();
+		return;
 	}
 	
-	open_Chick(0, 1);
-	
-	printf("%d\n", ans);
+	for(int i = here; i < chickPos.size(); i++) {
+		// 이미 열려있음 
+		if(open[i]) continue;
+		
+		open[i] = 1;
+		
+		dfs(i + 1, cnt + 1);
+		
+		open[i] = 0;
+	}
+}
+
+
+int main(void) {
+	input_Data();
+	dfs(0, 0);
+	printf("%d\n", minDist);
 	
 	return 0;
 }
