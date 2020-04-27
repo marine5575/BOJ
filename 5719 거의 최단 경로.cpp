@@ -1,3 +1,8 @@
+/**************************/
+// BOJ 5719 ê±°ì˜ ìµœë‹¨ ê²½ë¡œ
+// í•µì‹¬: dijkstra + DFS / BFS
+// 	 => ì†ë„: BFS <<<<< DFS (ê·¸ëƒ¥ 500 * 500 ì´ë©´ BFS ëŒë¦¬ê¸°)
+/**************************/
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -6,42 +11,42 @@
 
 using namespace std;
 
-int N, M;	// Àå¼Ò ¼ö, µµ·Î ¼ö 
-vector<pair<int, int>> adj[501];	// ÀÎÁ¢ ³ëµå 
-vector<pair<int, int>> trace[501];	// ÃÖ´Ü °Å¸®ÀÇ ÈçÀû 
+int N, M;	// ì¥ì†Œ ìˆ˜, ë„ë¡œ ìˆ˜ 
+vector<pair<int, int>> adj[501];	// ì¸ì ‘ ë…¸ë“œ 
+vector<pair<int, int>> trace[501];	// ìµœë‹¨ ê±°ë¦¬ì˜ í”ì  
 
 vector<int> dijkstra(int start) {
-	vector<int> dist(N, INF);	// °Å¸® 
-	priority_queue<pair<int, int>> pq;	// ÃÖ¼Ò °ª Ã£±â À§ÇØ 
-	pq.push(make_pair(0, start));	// Ã³À½ºÎÅÍ ¸·È÷¸é ¾ÈµÇ¹Ç·Î 
+	vector<int> dist(N, INF);	// ê±°ë¦¬ 
+	priority_queue<pair<int, int>> pq;	// ìµœì†Œ ê°’ ì°¾ê¸° ìœ„í•´ 
+	pq.push(make_pair(0, start));	// ì²˜ìŒë¶€í„° ë§‰íˆë©´ ì•ˆë˜ë¯€ë¡œ 
 
-	dist[start] = 0;	// ½ÃÀÛ ³ëµåÀÇ °Å¸® 
+	dist[start] = 0;	// ì‹œì‘ ë…¸ë“œì˜ ê±°ë¦¬ 
 
 	while (!pq.empty()) {
-		int now = pq.top().second;	// ÇöÀç À§Ä¡ 
-		int cost = -pq.top().first;	// ÇöÀç °Å¸® 
+		int now = pq.top().second;	// í˜„ì¬ ìœ„ì¹˜ 
+		int cost = -pq.top().first;	// í˜„ì¬ ê±°ë¦¬ 
 		pq.pop();
 
-		if (dist[now] < cost) continue;	// ÃÖ¼Ò °Å¸®¸¸ Åë°ú 
+		if (dist[now] < cost) continue;	// ìµœì†Œ ê±°ë¦¬ë§Œ í†µê³¼ 
 
-		// ÀÎÁ¢ ³ëµå °¹¼ö¸¸Å­ ¹İº¹ 
+		// ì¸ì ‘ ë…¸ë“œ ê°¯ìˆ˜ë§Œí¼ ë°˜ë³µ 
 		for (int i = 0; i < adj[now].size(); i++) {
-			int next = adj[now][i].second;	// ´ÙÀ½ ³ëµå 
-			int n_dist = adj[now][i].first + cost;	// ´ÙÀ½ ³ëµåÀÇ ÈÄº¸ °Å¸® 
+			int next = adj[now][i].second;	// ë‹¤ìŒ ë…¸ë“œ 
+			int n_dist = adj[now][i].first + cost;	// ë‹¤ìŒ ë…¸ë“œì˜ í›„ë³´ ê±°ë¦¬ 
 			
-			if (adj[now][i].first == -1) continue;	// °¡Àå ÃÖ´Ü °Å¸®¿´´ø ³ëµå´Â Á¦¿Ü 
+			if (adj[now][i].first == -1) continue;	// ê°€ì¥ ìµœë‹¨ ê±°ë¦¬ì˜€ë˜ ë…¸ë“œëŠ” ì œì™¸ 
 			
-			// ÈÄº¸°¡ ´õ ÀÛÀ» ¶§ °»½Å 
+			// í›„ë³´ê°€ ë” ì‘ì„ ë•Œ ê°±ì‹  
 			if (dist[next] > n_dist) {
 				dist[next] = n_dist;
 				pq.push(make_pair(-n_dist, next));
 				
-				// ÀÌÀü ÈçÀûÀº ÀÇ¹Ì x. »õ·Î ÈçÀû °»½Å 
+				// ì´ì „ í”ì ì€ ì˜ë¯¸ x. ìƒˆë¡œ í”ì  ê°±ì‹  
 				trace[next].clear();
 				trace[next].push_back(make_pair(n_dist, now));
 			}
-			// ÃÖ´Ü°Å¸®´Â ÇÑ °³°¡ ¾Æ´Ò ¼ö ÀÖÀ¸¹Ç·Î
-			// °°¾Æµµ ÈçÀûÀ» ³²±è 
+			// ìµœë‹¨ê±°ë¦¬ëŠ” í•œ ê°œê°€ ì•„ë‹ ìˆ˜ ìˆìœ¼ë¯€ë¡œ
+			// ê°™ì•„ë„ í”ì ì„ ë‚¨ê¹€ 
 			else if (dist[next] == n_dist) {
 				trace[next].push_back(make_pair(n_dist, now));
 			}
@@ -52,24 +57,24 @@ vector<int> dijkstra(int start) {
 }
 
 void bfs(int dest) {
-	queue<int> q;	// Â÷±ÙÂ÷±Ù ³ÖÀ» °ø°£ 
+	queue<int> q;	// ì°¨ê·¼ì°¨ê·¼ ë„£ì„ ê³µê°„ 
 	
 	q.push(dest);
 	
 	while(!q.empty()) {
-		int now = q.front();	// ÇöÀç À§Ä¡ 
+		int now = q.front();	// í˜„ì¬ ìœ„ì¹˜ 
 		q.pop();
 		
-		// ÇöÀç ÈçÀû¸¸Å­ Á¶»ç
-		// bfsÀÎ ÀÌÀ¯ 
+		// í˜„ì¬ í”ì ë§Œí¼ ì¡°ì‚¬
+		// bfsì¸ ì´ìœ  
 		for (int i = 0; i < trace[now].size(); i++) {
-			int next = trace[now][i].second;	// ´ÙÀ½ À§Ä¡ 
+			int next = trace[now][i].second;	// ë‹¤ìŒ ìœ„ì¹˜ 
 			
-			// »ç½Ç Áö±İ °Å²Ù·Î µÇÂ¤°í ÀÖ´Â °ÍÀÌ¹Ç·Î 
+			// ì‚¬ì‹¤ ì§€ê¸ˆ ê±°ê¾¸ë¡œ ë˜ì§šê³  ìˆëŠ” ê²ƒì´ë¯€ë¡œ 
 			for(int j = 0; j < adj[next].size(); j++) {
-				// ´ÙÀ½ À§Ä¡ÀÇ ÀÎÁ¢ÇÑ °Íµé Áß ÇöÀç À§Ä¡°¡ ÀÖ´Â°¡? 
+				// ë‹¤ìŒ ìœ„ì¹˜ì˜ ì¸ì ‘í•œ ê²ƒë“¤ ì¤‘ í˜„ì¬ ìœ„ì¹˜ê°€ ìˆëŠ”ê°€? 
 				if(adj[next][j].second == now) {
-					adj[next][j].first = -1;	// ¸ø ¿À°Ô ¸·¾Æ³õ±â 
+					adj[next][j].first = -1;	// ëª» ì˜¤ê²Œ ë§‰ì•„ë†“ê¸° 
 				}
 			}
 			
@@ -80,19 +85,19 @@ void bfs(int dest) {
 
 
 int main(void) {
-	// 0 0À» ÀÔ·Â ¹ŞÀ¸¸é Á¾·á 
+	// 0 0ì„ ì…ë ¥ ë°›ìœ¼ë©´ ì¢…ë£Œ 
 	while(scanf("%d %d", &N, &M) && !(N == 0 && M == 0)) {
-		int start, end;	// ½ÃÀÛ, ³¡ ÁöÁ¡ 
+		int start, end;	// ì‹œì‘, ë ì§€ì  
 		
 		scanf("%d %d", &start, &end);
 		
-		// ÈçÀû°ú ÀÎÁ¢ ³ëµå ÃÊ±âÈ­ 
+		// í”ì ê³¼ ì¸ì ‘ ë…¸ë“œ ì´ˆê¸°í™” 
 		for (int i = 0; i < 501; i++) {
 			adj[i].clear();
 			trace[i].clear();
 		}
 		
-		// ÀÎÁ¢ Á¤º¸ ¹Ş±â 
+		// ì¸ì ‘ ì •ë³´ ë°›ê¸° 
 		for(int i = 0; i < M; i++) {
 			int from, to, w;
 			
@@ -101,13 +106,13 @@ int main(void) {
 			adj[from].push_back(make_pair(w, to));
 		}
 		
-		// ÃÖ¼±ÀÇ ÃÖ´Ü °Å¸® Ã£±â 
+		// ìµœì„ ì˜ ìµœë‹¨ ê±°ë¦¬ ì°¾ê¸° 
 		dijkstra(start);
 		
-		// ÃÖ´Ü °Å¸®µéÀ» Áö¿ö¹ö¸®±â 
+		// ìµœë‹¨ ê±°ë¦¬ë“¤ì„ ì§€ì›Œë²„ë¦¬ê¸° 
 		bfs(end);
 		
-		vector<int> ans = dijkstra(start);	// °ÅÀÇ ÃÖ´Ü °Å¸® 
+		vector<int> ans = dijkstra(start);	// ê±°ì˜ ìµœë‹¨ ê±°ë¦¬ 
 		
 		if(ans[end] == INF) printf("-1\n");
 		else printf("%d\n", ans[end]);
