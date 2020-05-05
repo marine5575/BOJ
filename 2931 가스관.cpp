@@ -1,3 +1,7 @@
+/**********************/
+// BOJ 2931 가스관
+// 핵심: DFS (param 설정)
+/**********************/
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX 35
